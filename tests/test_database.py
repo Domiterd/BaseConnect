@@ -2,6 +2,7 @@
 import unittest
 from baseconnect import Database
 
+
 class TestDatabase(unittest.TestCase):
 
     def setUp(self):
@@ -11,6 +12,7 @@ class TestDatabase(unittest.TestCase):
         self.db.connect()
         self.assertIsNotNone(self.db.conn)
         self.db.close()
+
 
 if __name__ == '__main__':
     unittest.main()

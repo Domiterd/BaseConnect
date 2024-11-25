@@ -70,20 +70,25 @@ class Database:
             rows = self.cursor.fetchall()
             table_df = pd.DataFrame.from_records(rows, columns=columns)
 
-            # Tábla adatainak levágása
-            trimmed_table = self.trim_table_data(table_df)
             print("INFO: Table fetched successfully")
-            return trimmed_table
+            return table_df
         except pyodbc.Error as e:
             print(f"\033[91mERROR: Failed to fetch table: {e}\033[0m")
             return None
 
-    def trim_table_data(self, table):
-        # Ez a metódus eltávolítja a fölösleges szóközöket a cellák értékeiből
-        for col in table.columns:
-            if table[col].dtype == object:  # Ha az oszlop értékei karakterláncok
-                table[col] = table[col].str.strip()
-        return table
+    def query(self, query_string):
+        try:
+            query = query_string
+            self.cursor.execute(query)
+            columns = [column[0] for column in self.cursor.description]  # Oszlopnevek kinyerése
+            rows = self.cursor.fetchall()
+            table_df = pd.DataFrame.from_records(rows, columns=columns)
+
+            print("INFO: Table fetched successfully")
+            return table_df
+        except pyodbc.Error as e:
+            print(f"\033[91mERROR: Failed to fetch table: {e}\033[0m")
+            return None
 
     def close(self):
         if self.conn:
